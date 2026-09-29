@@ -2,10 +2,10 @@ pluginManagement {
     val weightVersion: String by settings
 
     repositories {
+        maven("https://repo.bacteriawa.com/repository/maven-public/")
+        maven("https://repo.papermc.io/repository/maven-public/")
         gradlePluginPortal()
         mavenLocal()
-        maven("https://repo.papermc.io/repository/maven-public/")
-        maven("https://repo.bacteriawa.com/repository/maven-public/")
     }
 
     plugins {
