@@ -1,0 +1,86 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Martijn Muijsers <martijnmuijsers@live.nl>
+Date: Sat, 26 Nov 2022 11:25:45 +0100
+Subject: [PATCH] Leaf: Reduce array allocations
+
+Ported to Luminol from Leaf (https://github.com/Winds-Studio/Leaf/blob/ver/26.2/leaf-server/minecraft-patches/features/0042-Reduce-array-allocations.patch)
+Original license: GPL-3.0-only (https://github.com/Winds-Studio/Leaf/blob/ver/26.2/LICENSE.md)
+Gale - https://galemc.org
+
+This is the follow-up delta on top of the already-applied Gale patch
+(0081-Gale-Reduce-array-allocations): ServerLevel#getCurrentlyTickingEntities
+and the remaining EquipmentSlot iteration sites in Mob.
+Leaf's PurpurCommand hunk is dropped because PurpurCommand does not
+exist in the Folia/Luminol source tree.
+
+diff --git a/net/minecraft/server/level/ServerLevel.java b/net/minecraft/server/level/ServerLevel.java
+index 7016a277ecf594682b9c1bb6c12009b67cc959e6..be6a0fa5ccbaa7a3af6ba0c70f16409436ac9ba0 100644
+--- a/net/minecraft/server/level/ServerLevel.java
++++ b/net/minecraft/server/level/ServerLevel.java
+@@ -1462,7 +1462,7 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
+ 
+     public static List<Entity> getCurrentlyTickingEntities() {
+         Entity ticking = currentlyTickingEntity.get();
+-        List<Entity> ret = java.util.Arrays.asList(ticking == null ? new Entity[0] : new Entity[] { ticking });
++        List<Entity> ret = java.util.Arrays.asList(ticking == null ? me.titaniumtown.ArrayConstants.emptyEntityArray : new Entity[] { ticking }); // Gale - JettPack - reduce array allocations
+ 
+         return ret;
+     }
+diff --git a/net/minecraft/world/entity/Mob.java b/net/minecraft/world/entity/Mob.java
+index a375b567eb71c661cdd67c19c18d37e674374cef..9c3ecc4dcb320c229fc5ab6571145ead8dffd681 100644
+--- a/net/minecraft/world/entity/Mob.java
++++ b/net/minecraft/world/entity/Mob.java
+@@ -391,7 +391,7 @@ public abstract class Mob extends LivingEntity implements Targeting, EquipmentUs
+         if (this.xpReward > 0) {
+             int result = this.xpReward;
+ 
+-            for (EquipmentSlot slot : EquipmentSlot.VALUES) {
++            for (EquipmentSlot slot : EquipmentSlot.VALUES_ARRAY) { // Gale - JettPack - reduce array allocations
+                 if (slot.canIncreaseExperience()) {
+                     ItemStack item = this.getItemBySlot(slot);
+                     if (!item.isEmpty() && this.dropChances.byEquipment(slot) <= 1.0F) {
+@@ -682,7 +682,7 @@ public abstract class Mob extends LivingEntity implements Targeting, EquipmentUs
+     }
+ 
+     protected boolean attemptToShearEquipment(final Player player, final InteractionHand hand, final ItemStack heldItem) {
+-        for (EquipmentSlot slot : EquipmentSlot.VALUES) {
++        for (EquipmentSlot slot : EquipmentSlot.VALUES_ARRAY) { // Gale - JettPack - reduce array allocations
+             ItemStack itemStack = this.getItemBySlot(slot);
+             Equippable equippable = itemStack.get(DataComponents.EQUIPPABLE);
+             if (equippable != null
+@@ -1076,7 +1076,7 @@ public abstract class Mob extends LivingEntity implements Targeting, EquipmentUs
+         super.dropCustomDeathLoot(level, source, killedByPlayer);
+ 
+         this.droppedEquipmentSlots.clear(); // Paper
+-        for (EquipmentSlot slot : EquipmentSlot.VALUES) {
++        for (EquipmentSlot slot : EquipmentSlot.VALUES_ARRAY) { // Gale - JettPack - reduce array allocations
+             ItemStack itemStack = this.getItemBySlot(slot);
+             // Paper start
+             if (this.guaranteedToDropUndamaged(slot)) {
+@@ -1122,7 +1122,7 @@ public abstract class Mob extends LivingEntity implements Targeting, EquipmentUs
+     public Set<EquipmentSlot> dropPreservedEquipment(final ServerLevel level, final Predicate<ItemStack> shouldDrop) {
+         Set<EquipmentSlot> slotsPreventedFromDropping = new HashSet<>();
+ 
+-        for (EquipmentSlot slot : EquipmentSlot.VALUES) {
++        for (EquipmentSlot slot : EquipmentSlot.VALUES_ARRAY) { // Gale - JettPack - reduce array allocations
+             ItemStack itemStack = this.getItemBySlot(slot);
+             if (!itemStack.isEmpty() && (this.deathDropItems == null || !this.droppedEquipmentSlots.contains(slot))) { // Paper - account for already dropped item in dropCustomDeathLoot to not duplicate loot
+                 if (!shouldDrop.test(itemStack)) {
+@@ -1256,7 +1256,7 @@ public abstract class Mob extends LivingEntity implements Targeting, EquipmentUs
+     protected void populateDefaultEquipmentEnchantments(final ServerLevelAccessor level, final RandomSource random, final DifficultyInstance localDifficulty) {
+         this.enchantSpawnedWeapon(level, random, localDifficulty);
+ 
+-        for (EquipmentSlot slot : EquipmentSlot.VALUES) {
++        for (EquipmentSlot slot : EquipmentSlot.VALUES_ARRAY) { // Gale - JettPack - reduce array allocations
+             if (slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR) {
+                 this.enchantSpawnedArmor(level, random, slot, localDifficulty);
+             }
+@@ -1684,7 +1684,7 @@ public abstract class Mob extends LivingEntity implements Targeting, EquipmentUs
+     protected void removeAfterChangingDimensions() {
+         super.removeAfterChangingDimensions();
+ 
+-        for (EquipmentSlot slot : EquipmentSlot.VALUES) {
++        for (EquipmentSlot slot : EquipmentSlot.VALUES_ARRAY) { // Gale - JettPack - reduce array allocations
+             ItemStack itemStack = this.getItemBySlot(slot);
+             if (!itemStack.isEmpty()) {
+                 itemStack.setCount(0);
