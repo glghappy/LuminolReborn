@@ -1,8 +1,7 @@
 git submodule update --init --recursive
 
-echo "Patching MaplePile"
-
-git -C MaplePile apply ../maple_pile_dependices_settings.patch
+# The pinned MaplePile commit already contains the migrated dependency
+# settings, so maple_pile_dependices_settings.patch must not be applied.
 
 echo "Generating sources for MaplePile"
 
