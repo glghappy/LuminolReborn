@@ -8,24 +8,14 @@ Original license: GPL-3.0-only (https://github.com/Winds-Studio/Leaf/blob/ver/26
 Gale - https://galemc.org
 
 This is the follow-up delta on top of the already-applied Gale patch
-(0081-Gale-Reduce-array-allocations): ServerLevel#getCurrentlyTickingEntities
-and the remaining EquipmentSlot iteration sites in Mob.
+(0081-Gale-Reduce-array-allocations): the remaining EquipmentSlot
+iteration sites in Mob.
 Leaf's PurpurCommand hunk is dropped because PurpurCommand does not
 exist in the Folia/Luminol source tree.
+Leaf's ServerLevel#getCurrentlyTickingEntities hunk is dropped because
+Folia stubs that method with UnsupportedOperationException (region
+threading), so the allocation being optimised no longer exists.
 
-diff --git a/net/minecraft/server/level/ServerLevel.java b/net/minecraft/server/level/ServerLevel.java
-index 7016a277ecf594682b9c1bb6c12009b67cc959e6..be6a0fa5ccbaa7a3af6ba0c70f16409436ac9ba0 100644
---- a/net/minecraft/server/level/ServerLevel.java
-+++ b/net/minecraft/server/level/ServerLevel.java
-@@ -1462,7 +1462,7 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
- 
-     public static List<Entity> getCurrentlyTickingEntities() {
-         Entity ticking = currentlyTickingEntity.get();
--        List<Entity> ret = java.util.Arrays.asList(ticking == null ? new Entity[0] : new Entity[] { ticking });
-+        List<Entity> ret = java.util.Arrays.asList(ticking == null ? me.titaniumtown.ArrayConstants.emptyEntityArray : new Entity[] { ticking }); // Gale - JettPack - reduce array allocations
- 
-         return ret;
-     }
 diff --git a/net/minecraft/world/entity/Mob.java b/net/minecraft/world/entity/Mob.java
 index a375b567eb71c661cdd67c19c18d37e674374cef..9c3ecc4dcb320c229fc5ab6571145ead8dffd681 100644
 --- a/net/minecraft/world/entity/Mob.java
@@ -75,9 +65,11 @@ index a375b567eb71c661cdd67c19c18d37e674374cef..9c3ecc4dcb320c229fc5ab6571145ead
              if (slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR) {
                  this.enchantSpawnedArmor(level, random, slot, localDifficulty);
              }
-@@ -1684,7 +1684,7 @@ public abstract class Mob extends LivingEntity implements Targeting, EquipmentUs
-     protected void removeAfterChangingDimensions() {
-         super.removeAfterChangingDimensions();
+@@ -1658,9 +1658,9 @@ public abstract class Mob extends LivingEntity implements Targeting, EquipmentU
+     // Folia start - moved from removeAfterChangingDimensions()
+     @Override
+     protected void postRemoveAfterChangingDimensions() {
+         super.postRemoveAfterChangingDimensions();
  
 -        for (EquipmentSlot slot : EquipmentSlot.VALUES) {
 +        for (EquipmentSlot slot : EquipmentSlot.VALUES_ARRAY) { // Gale - JettPack - reduce array allocations
