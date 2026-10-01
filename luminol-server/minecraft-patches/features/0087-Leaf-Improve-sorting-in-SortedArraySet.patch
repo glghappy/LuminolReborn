@@ -9,7 +9,6 @@ Original license: https://github.com/Winds-Studio/Leaf/blob/ver/26.2/LICENSE.md
 Changes between 5% to 10% depending on the size of the array
 For size 16: ~5% improvement (735.589 ns vs 697.095 ns)
 For size 4096: ~10% improvement (1563.115 ns vs 1396.803 ns)
-
 diff --git a/net/minecraft/util/SortedArraySet.java b/net/minecraft/util/SortedArraySet.java
 index 295b29ba4e46aa438813180802e6c452392c7109..3661843582a6e5e4c8c49253bb942d6baf25c3b7 100644
 --- a/net/minecraft/util/SortedArraySet.java
@@ -21,9 +20,9 @@ index 295b29ba4e46aa438813180802e6c452392c7109..3661843582a6e5e4c8c49253bb942d6b
 +    private final boolean isNaturalOrder; // Leaf - Improve sorting in SortedArraySet
      private T[] contents;
      private int size;
-
+ 
 @@ -92,6 +93,7 @@ public class SortedArraySet<T> extends AbstractSet<T> implements ca.spottedleaf.
-
+ 
      private SortedArraySet(final int initialCapacity, final Comparator<T> comparator) {
          this.comparator = comparator;
 +        this.isNaturalOrder = comparator == Comparator.naturalOrder(); // Leaf - Improve sorting in SortedArraySet
@@ -32,12 +31,12 @@ index 295b29ba4e46aa438813180802e6c452392c7109..3661843582a6e5e4c8c49253bb942d6b
          }
 @@ -120,9 +122,57 @@ public class SortedArraySet<T> extends AbstractSet<T> implements ca.spottedleaf.
      }
-
+ 
      private int findIndex(final T t) {
 -        return Arrays.binarySearch(this.contents, 0, this.size, t, this.comparator);
 +        return isNaturalOrder ? naturalBinarySearch(t) : customBinarySearch(t); // Leaf - Improve sorting in SortedArraySet
      }
-
+ 
 +    // Leaf start - Improve sorting in SortedArraySet
 +    private int naturalBinarySearch(final T t) {
 +        int low = 0;

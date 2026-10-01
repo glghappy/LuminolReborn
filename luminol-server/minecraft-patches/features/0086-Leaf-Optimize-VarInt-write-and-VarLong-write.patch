@@ -24,14 +24,13 @@ Inspired by the approach described at the bottom of https://richardstartin.githu
 Given that we do a lot of varint writing as well, this should provide a small performance boost for larger/complex packets whilst not regressing hard on smaller packets.
 
 This includes a test to ensure that the behavior is as expected and fixes the initialization loop so that the correct results will be given. Much thanks to @octylFractal for acting as my duck while trying to figure this out.
-
 diff --git a/net/minecraft/network/VarInt.java b/net/minecraft/network/VarInt.java
-index 1428ce80e8316a24cfca7b6aafdea5588a5a790e..529744f10da2c403650c895168edf7f8ad5ac458 100644
+index 1428ce80e8316a24cfca7b6aafdea8588a5a790e..529744f10da2c403650c895168edf7f8ad5ac458 100644
 --- a/net/minecraft/network/VarInt.java
 +++ b/net/minecraft/network/VarInt.java
 @@ -51,6 +51,40 @@ public class VarInt {
      }
-
+ 
      public static ByteBuf write(final ByteBuf output, int value) {
 +        // Gale start - Velocity - optimized VarInt#write
 +        if ((value & 0xFFFFFF80) == 0) {
@@ -76,7 +75,7 @@ index fbdc414be0f9e5c15ad72d11c134d75fc3851cec..8eb1a10f2bd06b4f9e66eb7908724459
 +++ b/net/minecraft/network/VarLong.java
 @@ -51,6 +51,126 @@ public class VarLong {
      }
-
+ 
      public static ByteBuf write(final ByteBuf output, long value) {
 +        // Gale start - Velocity - optimized VarLong#write
 +        if ((value & 0xFFFFFFFFFFFFFF80L) == 0) {
@@ -184,7 +183,7 @@ index fbdc414be0f9e5c15ad72d11c134d75fc3851cec..8eb1a10f2bd06b4f9e66eb7908724459
 +                | ((least7bits >>> 21) & 0x7F)
 +                | 0x80808080;
 +            long nonLeast7Bits = value >>> 28;
-+            int secondLeast7bits = (int) (nonLeast7bits & 0xFFFFFFFL);
++            int secondLeast7bits = (int) (nonLeast7Bits & 0xFFFFFFFL);
 +            int w2 = (secondLeast7bits & 0x7F) << 24
 +                | ((secondLeast7bits & 0x3F80) << 9)
 +                | (secondLeast7bits & 0x1FC000) >> 6

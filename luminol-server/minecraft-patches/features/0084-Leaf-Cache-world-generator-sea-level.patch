@@ -26,7 +26,6 @@ repo: https://github.com/CaffeineMC/lithium.git
 track:
 - "common/src/main/java/net/caffeinemc/mods/lithium/mixin/gen/cached_generator_settings/NoiseBasedChunkGeneratorMixin.java"
 // SYNC SOURCE END
-
 diff --git a/net/minecraft/world/level/levelgen/NoiseBasedChunkGenerator.java b/net/minecraft/world/level/levelgen/NoiseBasedChunkGenerator.java
 index 3f66d1144daf7139a91bfa35e2c288d88bbae38b..9b4a52b73912d5a169565198d2b2a0263d74aa07 100644
 --- a/net/minecraft/world/level/levelgen/NoiseBasedChunkGenerator.java
@@ -36,11 +35,11 @@ index 3f66d1144daf7139a91bfa35e2c288d88bbae38b..9b4a52b73912d5a169565198d2b2a026
      private final Holder<NoiseGeneratorSettings> settings;
      private final Supplier<Aquifer.FluidPicker> globalFluidPicker;
 +    private int cachedSeaLevel = Integer.MIN_VALUE; // Gale - Lithium - cache world generator sea level
-
+ 
      public NoiseBasedChunkGenerator(final BiomeSource biomeSource, final Holder<NoiseGeneratorSettings> settings) {
          super(biomeSource);
 @@ -483,7 +484,12 @@ public final class NoiseBasedChunkGenerator extends ChunkGenerator {
-
+ 
      @Override
      public int getSeaLevel() {
 -        return this.settings.value().seaLevel();
@@ -51,5 +50,5 @@ index 3f66d1144daf7139a91bfa35e2c288d88bbae38b..9b4a52b73912d5a169565198d2b2a026
 +        return this.cachedSeaLevel;
 +        // Gale end - Lithium - cache world generator sea level
      }
-
+ 
      @Override

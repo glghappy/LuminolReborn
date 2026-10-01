@@ -20,14 +20,13 @@ Inspired by the approach described at the bottom of https://richardstartin.githu
 Given that we do a lot of varint writing as well, this should provide a small performance boost for larger/complex packets whilst not regressing hard on smaller packets.
 
 This includes a test to ensure that the behavior is as expected and fixes the initialization loop so that the correct results will be given. Much thanks to @octylFractal for acting as my duck while trying to figure this out.
-
 diff --git a/net/minecraft/network/VarLong.java b/net/minecraft/network/VarLong.java
 index 913442a641134fed4ad5669f190c508c3109ab6a..fbdc414be0f9e5c15ad72d11c134d75fc3851cec 100644
 --- a/net/minecraft/network/VarLong.java
 +++ b/net/minecraft/network/VarLong.java
 @@ -9,6 +9,18 @@ public class VarLong {
      private static final int DATA_BITS_PER_BYTE = 7;
-
+ 
      public static int getByteSize(final long value) {
 +        // Gale start - Velocity - pre-compute VarInt and VarLong sizes
 +        return VARLONG_EXACT_BYTE_LENGTHS[Long.numberOfLeadingZeros(value)];

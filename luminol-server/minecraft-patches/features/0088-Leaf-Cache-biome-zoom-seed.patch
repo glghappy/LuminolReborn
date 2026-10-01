@@ -5,7 +5,6 @@ Subject: [PATCH] Leaf: Cache biome zoom seed
 
 Ported to Luminol from Leaf (https://github.com/Winds-Studio/Leaf/blob/ver/26.2/leaf-server/minecraft-patches/features/0231-cache-biome-zoom-seed.patch)
 Original license: https://github.com/Winds-Studio/Leaf/blob/ver/26.2/LICENSE.md
-
 diff --git a/net/minecraft/server/MinecraftServer.java b/net/minecraft/server/MinecraftServer.java
 index 7d43201ad4b66209c31f69c32a0d88590aae906c..c6a6babf3329dd7b622bd84b1d5446b952c6740b 100644
 --- a/net/minecraft/server/MinecraftServer.java
@@ -47,7 +46,7 @@ index 015539951e2a6af0e7b50c05512d1f6200ef2797..1049e948496fcbab5f3d5789ec1e9756
          this.centerChunkX = centerPos.x();
          this.centerChunkZ = centerPos.z();
 diff --git a/net/minecraft/world/level/levelgen/WorldOptions.java b/net/minecraft/world/level/levelgen/WorldOptions.java
-index b23dd531d284647e614f134c41e70593d5c04..4d58651cbaedb3035b7d8d8f367afc3f980da295 100644
+index b23dd531d284647e614f07f134c41e70593d5c04..4d58651cbaedb3035b7d8d8f367afc3f980da295 100644
 --- a/net/minecraft/world/level/levelgen/WorldOptions.java
 +++ b/net/minecraft/world/level/levelgen/WorldOptions.java
 @@ -38,6 +38,7 @@ public class WorldOptions {
@@ -64,7 +63,7 @@ index b23dd531d284647e614f134c41e70593d5c04..4d58651cbaedb3035b7d8d8f367afc3f980
          this.legacyCustomOptions = legacyCustomOptions;
 +        this.biomeZoomSeed = net.minecraft.world.level.biome.BiomeManager.obfuscateSeed(seed); // Leaf - cache biome zoom seed
      }
-
+ 
 +    // Leaf start - cache biome zoom seed
 +    public long biomeZoomSeed() {
 +        return this.biomeZoomSeed;

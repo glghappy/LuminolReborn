@@ -5,9 +5,8 @@ Subject: [PATCH] Leaf: Replace ServerClockManager map with optimized collection
 
 Ported to Luminol from Leaf (https://github.com/Winds-Studio/Leaf/blob/ver/26.2/leaf-server/minecraft-patches/features/0319-Replace-ServerClockManager-map-with-optimized-collec.patch)
 Original license: https://github.com/Winds-Studio/Leaf/blob/ver/26.2/LICENSE.md
-
 diff --git a/net/minecraft/world/clock/ServerClockManager.java b/net/minecraft/world/clock/ServerClockManager.java
-index e5889a8df7a2bc9ff8a390f45c7ed0c9fea3c2f..bc33da99d729a80f45c7ed0c9fea3c2afc34c404 100644
+index e5889a8df7a2bc9ff8a390f97802f4e2ce92cfe1..bc33da99d729a80f45c7ed0c9fea3c2afc34c404 100644
 --- a/net/minecraft/world/clock/ServerClockManager.java
 +++ b/net/minecraft/world/clock/ServerClockManager.java
 @@ -31,7 +31,7 @@ public class ServerClockManager extends SavedData implements ClockManager {
@@ -16,6 +15,6 @@ index e5889a8df7a2bc9ff8a390f45c7ed0c9fea3c2f..bc33da99d729a80f45c7ed0c9fea3c2af
      private @org.jspecify.annotations.Nullable ServerLevel level; // Paper - per-world time
 -    private final Map<Holder<WorldClock>, ServerClockManager.ClockInstance> clocks = new HashMap<>();
 +    private final Map<Holder<WorldClock>, ServerClockManager.ClockInstance> clocks = new it.unimi.dsi.fastutil.objects.Object2ReferenceLinkedOpenHashMap<>(); // Leaf - Replace ServerClockManager map with optimized collection
-
+ 
      private ServerClockManager(final PackedClockStates packedClockStates) {
          this.packedClockStates = packedClockStates;
