@@ -1,6 +1,4 @@
 [submodule "MaplePile"]
 	path = MaplePile
 	url = https://github.com/glghappy/MaplePile
-[submodule "folia-api"]
-    path = folia-api
-    url = https://github.com/PaperMC/Folia.git
+
