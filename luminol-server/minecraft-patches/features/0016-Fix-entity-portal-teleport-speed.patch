@@ -5,10 +5,10 @@ Subject: [PATCH] Fix entity portal-teleport speed
 
 
 diff --git a/net/minecraft/server/level/ServerLevel.java b/net/minecraft/server/level/ServerLevel.java
-index 3db75ac3f7f111b94178cc29684f24dd55ac5847..c879fa8f0358f7445b3ba0a85639ed49688df441 100644
+index 35ab432bbd59aba80a6eaca1769e6aa82c8a7e46..6950fa2462353f30ee02e1d0091cfcf289f63939 100644
 --- a/net/minecraft/server/level/ServerLevel.java
 +++ b/net/minecraft/server/level/ServerLevel.java
-@@ -1491,7 +1491,27 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
+@@ -1492,7 +1492,27 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
          foliaProfiler.startTimer(timerId);
          try {
          // Folia end - profiler
@@ -36,7 +36,7 @@ index 3db75ac3f7f111b94178cc29684f24dd55ac5847..c879fa8f0358f7445b3ba0a85639ed49
          entity.tick();
          // Folia start - region threading
          if (!ca.spottedleaf.moonrise.common.util.TickThread.isTickThreadFor(entity)) {
-@@ -1502,6 +1522,8 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
+@@ -1503,6 +1523,8 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
              // portalled
              return;
          }
@@ -46,10 +46,10 @@ index 3db75ac3f7f111b94178cc29684f24dd55ac5847..c879fa8f0358f7445b3ba0a85639ed49
          } else {entity.inactiveTick();} // Paper - EAR 2
          profiler.pop();
 diff --git a/net/minecraft/world/entity/Entity.java b/net/minecraft/world/entity/Entity.java
-index 89209fffec9ff931ab4bd2e75b2588f4062b0def..38e2af57532ae91e6e7284f9f11bbe6406906b47 100644
+index 6fa3ac9a37dafa166d8e70aaf4ec369db0792200..bb02a5d2e752c7a3f0aba9ff115f3df61b9e141a 100644
 --- a/net/minecraft/world/entity/Entity.java
 +++ b/net/minecraft/world/entity/Entity.java
-@@ -387,6 +387,7 @@ public abstract class Entity
+@@ -388,6 +388,7 @@ public abstract class Entity
      public long activatedTick = Integer.MIN_VALUE;
      public boolean isTemporarilyActive;
      public long activatedImmunityTick = Integer.MIN_VALUE;
@@ -57,7 +57,7 @@ index 89209fffec9ff931ab4bd2e75b2588f4062b0def..38e2af57532ae91e6e7284f9f11bbe64
  
      public void inactiveTick() {
      }
-@@ -3595,6 +3596,7 @@ public abstract class Entity
+@@ -3597,6 +3598,7 @@ public abstract class Entity
          } else {
              if (this.portalProcess == null || !this.portalProcess.isSamePortal(portal)) {
                  this.portalProcess = new PortalProcessor(portal, pos.immutable());

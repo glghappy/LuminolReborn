@@ -24,8 +24,9 @@ Inspired by the approach described at the bottom of https://richardstartin.githu
 Given that we do a lot of varint writing as well, this should provide a small performance boost for larger/complex packets whilst not regressing hard on smaller packets.
 
 This includes a test to ensure that the behavior is as expected and fixes the initialization loop so that the correct results will be given. Much thanks to @octylFractal for acting as my duck while trying to figure this out.
+
 diff --git a/net/minecraft/network/VarInt.java b/net/minecraft/network/VarInt.java
-index 1428ce80e8316a24cfca7b6aafdea8588a5a790e..529744f10da2c403650c895168edf7f8ad5ac458 100644
+index 73b01c4ac8c69f6a984c8f3947cdd2688cd70c14..122dcc92603eb73a0273fa39daccb593259187c7 100644
 --- a/net/minecraft/network/VarInt.java
 +++ b/net/minecraft/network/VarInt.java
 @@ -51,6 +51,40 @@ public class VarInt {

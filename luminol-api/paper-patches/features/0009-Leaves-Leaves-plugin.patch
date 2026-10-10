@@ -8,10 +8,10 @@ As part of: Leaves (https://github.com/HyacinthHaru/Leaves/blob/90080d238e2fcfc1
 Licensed under: GPL-3.0 (https://www.gnu.org/licenses/gpl-3.0.html)
 
 diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
-index 8a24b84db656da4cec59e9bccac306467c8155b0..0ac1e049fad85de8365380b03e60d915ee643f16 100644
+index 325d797766de527268eb18bcf9db594ca3a0c519..e922a0eefb03db5e33f3306aaea558b6ed61b42a 100644
 --- a/src/main/java/org/bukkit/Bukkit.java
 +++ b/src/main/java/org/bukkit/Bukkit.java
-@@ -3046,4 +3046,10 @@ public final class Bukkit {
+@@ -3045,4 +3045,10 @@ public final class Bukkit {
      public static void restart() {
          server.restart();
      }
@@ -23,10 +23,10 @@ index 8a24b84db656da4cec59e9bccac306467c8155b0..0ac1e049fad85de8365380b03e60d915
 +    // Leaves end - Feature API
  }
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
-index 42335e351e0cb4f82f46501503a15349f8a82e1b..cd5f47f6d7fa15c1533724673b8bc2c75394795b 100644
+index fcd02365f39f41e3c589df52d62a377050107dad..faf02dc8c69492c208b345d9f9fcc91cec2df0b9 100644
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
-@@ -2781,6 +2781,10 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
+@@ -2779,6 +2779,10 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
      me.earthme.luminol.api.config.LuminolConfigsInstance getLuminolConfigs(String name);
      // Luminol end - Luminol Config API
  

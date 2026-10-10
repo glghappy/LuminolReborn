@@ -31,10 +31,10 @@ index ad1330d87223dfcf3c9da40aa5ece8c21141f0d6..22edf161ba1ca8c31140e25e8c4fe150
  
      public void setFallbackCommands() {
 diff --git a/src/main/java/org/bukkit/plugin/SimplePluginManager.java b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
-index d1f1e5adbd18800aeb44bf71f4a002c674fc958d..34631bb3253d3120b6d4f8e86b5e0ddcbd69bdf2 100644
+index 457e75bbecb70ac3da4c21382f97d68de5a00547..cf22ea227f6dcc13702fb5f6f94bba5b6e326b97 100644
 --- a/src/main/java/org/bukkit/plugin/SimplePluginManager.java
 +++ b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
-@@ -966,7 +966,7 @@ public final class SimplePluginManager implements PluginManager {
+@@ -960,7 +960,7 @@ public final class SimplePluginManager implements PluginManager {
       */
      @Deprecated(forRemoval = true)
      public void useTimings(boolean use) {

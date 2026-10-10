@@ -8,22 +8,22 @@ As part of: Kaiiju (https://github.com/KaiijuMC/Kaiiju/blob/c2b7aec8f7b418a39a2e
 Licensed under: GPL-3.0 (https://github.com/KaiijuMC/Kaiiju/blob/c2b7aec8f7b418a39a2ec408e6411e6f752379da/LICENSE)
 
 diff --git a/io/papermc/paper/threadedregions/RegionizedWorldData.java b/io/papermc/paper/threadedregions/RegionizedWorldData.java
-index cb15cfbc684ae9e9d9634886f707c2df10063139..f32d118e1e925b2155cef3fcdcb1e194c541e242 100644
+index c8f13da82c55cc5c1fe1c922a87e3eccb1117937..981458f6697a79dbc9fc8cf41c088c98e556c6dd 100644
 --- a/io/papermc/paper/threadedregions/RegionizedWorldData.java
 +++ b/io/papermc/paper/threadedregions/RegionizedWorldData.java
-@@ -354,6 +354,7 @@ public final class RegionizedWorldData {
+@@ -349,6 +349,7 @@ public final class RegionizedWorldData {
      private final IteratorSafeOrderedReferenceSet<Mob> navigatingMobs = new IteratorSafeOrderedReferenceSet<>();
-     public final ReferenceList<Entity> trackerEntities = new ReferenceList<>(EMPTY_ENTITY_ARRAY); // Moonrise - entity tracker
-     public final ReferenceList<Entity> trackerUnloadedEntities = new ReferenceList<>(EMPTY_ENTITY_ARRAY); // Moonrise - entity tracker
+     public ReferenceList<Entity> trackerEntities = new ReferenceList<>(EMPTY_ENTITY_ARRAY); // Moonrise - entity tracker
+     public boolean iteratingTrackerEntities;
 +    public final dev.kaiijumc.kaiiju.KaiijuEntityThrottler entityThrottler = new dev.kaiijumc.kaiiju.KaiijuEntityThrottler(); // Kaiiju
  
      // block ticking
      private final ObjectLinkedOpenHashSet<BlockEventData> blockEvents = new ObjectLinkedOpenHashSet<>();
 diff --git a/net/minecraft/server/level/ServerLevel.java b/net/minecraft/server/level/ServerLevel.java
-index 680b86efd29b7c4e60a0ddd667aac83a9292d123..53f97a89d05ed7c764975cda9a301ed04d3503d9 100644
+index def5d4ce012dba5f819680d671235173467bfe7a..1c01ec9597c47b7296f498a897f1fd2333c8c4d4 100644
 --- a/net/minecraft/server/level/ServerLevel.java
 +++ b/net/minecraft/server/level/ServerLevel.java
-@@ -916,6 +916,7 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
+@@ -917,6 +917,7 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
              }
  
              foliaProfiler.startTimer(ca.spottedleaf.leafprofiler.LProfilerRegistry.ACTIVATE_ENTITIES); try { // Folia - profiler
@@ -31,7 +31,7 @@ index 680b86efd29b7c4e60a0ddd667aac83a9292d123..53f97a89d05ed7c764975cda9a301ed0
              io.papermc.paper.entity.activation.ActivationRange.activateEntities(this); // Paper - EAR
              } finally { foliaProfiler.stopTimer(ca.spottedleaf.leafprofiler.LProfilerRegistry.ACTIVATE_ENTITIES); } // Folia - profiler
              foliaProfiler.startTimer(ca.spottedleaf.leafprofiler.LProfilerRegistry.ENTITY_TICK); try { // Folia - profiler
-@@ -937,6 +938,13 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
+@@ -938,6 +939,13 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
  
                                          entity.stopRiding();
                                      }
@@ -45,7 +45,7 @@ index 680b86efd29b7c4e60a0ddd667aac83a9292d123..53f97a89d05ed7c764975cda9a301ed0
  
                                      profiler.push("tick");
                                      this.guardEntityTick(this::tickNonPassenger, entity);
-@@ -946,6 +954,7 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
+@@ -947,6 +955,7 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
                          }
                      }
                  );

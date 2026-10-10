@@ -20,10 +20,10 @@ As part of: Akarin (https://github.com/Akarin-project/Akarin)
 Licensed under: GPL-3.0-only (https://www.gnu.org/licenses/gpl-3.0.html)
 
 diff --git a/net/minecraft/world/entity/Entity.java b/net/minecraft/world/entity/Entity.java
-index 40dc99e52282b166705b0aa9f1f218a5011354d8..b38e0e4e24b3de9b580548570e32fd375e9df6d1 100644
+index bdc785b3d39512137d7d849ded9c2927ff027e70..2e5014a5279a74bdae5d2ac8f4e09bac3e3f9cb2 100644
 --- a/net/minecraft/world/entity/Entity.java
 +++ b/net/minecraft/world/entity/Entity.java
-@@ -2441,8 +2441,8 @@ public abstract class Entity
+@@ -2442,8 +2442,8 @@ public abstract class Entity
      }
  
      public void push(final Entity entity) {
@@ -31,5 +31,5 @@ index 40dc99e52282b166705b0aa9f1f218a5011354d8..b38e0e4e24b3de9b580548570e32fd37
          if (!this.isPassengerOfSameVehicle(entity)) {
 -            if (!entity.noPhysics && !this.noPhysics) {
                  if (this.level.paperConfig().collisions.onlyPlayersCollide && !(entity instanceof ServerPlayer || this instanceof ServerPlayer)) return; // Paper - Collision option for requiring a player participant
-                 double xa = entity.getX() - this.getX();
-                 double za = entity.getZ() - this.getZ();
+                 // Paper start - Add EntityCollideWithEntity Event
+                 if (io.papermc.paper.event.entity.EntityCollideWithEntityEvent.getHandlerList().getRegisteredListeners().length != 0 &&

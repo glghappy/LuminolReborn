@@ -61,9 +61,9 @@
      )
  }
  
-@@ -103,10 +_,14 @@
+@@ -102,10 +_,14 @@
      main {
-         java { srcDir("../paper-server/src/main/java"); srcDir("../paper-server/src/generated/java") }
+         java { srcDir("../paper-server/src/main/java") }
          resources { srcDir("../paper-server/src/main/resources") }
 +        java { srcDir("../folia-server/src/main/java") }
 +        resources { srcDir("../folia-server/src/main/resources") }
@@ -76,12 +76,10 @@
      }
  }
  val log4jPlugins = sourceSets.create("log4jPlugins") {
-@@ -134,8 +_,23 @@
- }
- 
+@@ -136,6 +_,21 @@
  dependencies {
 -    implementation(project(":folia-api"))
--    implementation("ca.spottedleaf:leafpile:1.0.0")
+-    implementation("ca.spottedleaf:leafpile:1.2.0")
 +    implementation(project(":luminol-api"))
 +    // Luminol start - Dependenices insert
 +    implementation("net.objecthunter:exp4j:0.4.8")

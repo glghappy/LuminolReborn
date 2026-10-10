@@ -17,10 +17,10 @@ index 52dcbcf64c3a510d4a4524b7d0ee226d9a73511d..051d601e7e809518e8d82ae4ae325905
      }
  
 diff --git a/net/minecraft/server/MinecraftServer.java b/net/minecraft/server/MinecraftServer.java
-index df8b7a6f4ead38d9642038155743bf7eec4903f5..8fde6cfbe678da08b8c44921c1cbf0560a7c155f 100644
+index 3f53d4a5ee6f89be0dd3121d1ce64df699f7b02e..2d89dca8d5afd6719e0f19df3a7144a1916e12f9 100644
 --- a/net/minecraft/server/MinecraftServer.java
 +++ b/net/minecraft/server/MinecraftServer.java
-@@ -1733,7 +1733,46 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1742,7 +1742,46 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
          // Folia end - region threading
          //this.tickCount++; // Folia - region threading
          //this.tickRateManager.tick(); // Folia - region threading
@@ -68,10 +68,10 @@ index df8b7a6f4ead38d9642038155743bf7eec4903f5..8fde6cfbe678da08b8c44921c1cbf056
              this.lastServerStatus = nano;
              this.status = this.buildServerStatus();
 diff --git a/net/minecraft/server/level/ServerLevel.java b/net/minecraft/server/level/ServerLevel.java
-index 53f97a89d05ed7c764975cda9a301ed04d3503d9..7e20e947fe35e8f8073a3bf97fb257bfa643f50e 100644
+index 1c01ec9597c47b7296f498a897f1fd2333c8c4d4..015f0521aa65201fab990177867d10e0ea0611d4 100644
 --- a/net/minecraft/server/level/ServerLevel.java
 +++ b/net/minecraft/server/level/ServerLevel.java
-@@ -1490,6 +1490,8 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
+@@ -1491,6 +1491,8 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
      public void tickNonPassenger(final Entity entity) {
          // Paper start - log detailed entity tick information
          ca.spottedleaf.moonrise.common.util.TickThread.ensureTickThread("Cannot tick an entity off-main");
@@ -80,7 +80,7 @@ index 53f97a89d05ed7c764975cda9a301ed04d3503d9..7e20e947fe35e8f8073a3bf97fb257bf
          try {
              // Folia - region threading
              // Paper end - log detailed entity tick information
-@@ -1551,6 +1553,7 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
+@@ -1552,6 +1554,7 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
          } finally {
              // Folia - region threading
          }
@@ -88,7 +88,7 @@ index 53f97a89d05ed7c764975cda9a301ed04d3503d9..7e20e947fe35e8f8073a3bf97fb257bf
          // Paper end - log detailed entity tick information
      }
  
-@@ -1562,6 +1565,8 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
+@@ -1563,6 +1566,8 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
              final int timerId = isActive ? entity.getType().tickTimerId : entity.getType().inactiveTickTimerId;
              final ca.spottedleaf.leafprofiler.RegionizedProfiler.Handle foliaProfiler = io.papermc.paper.threadedregions.TickRegionScheduler.getProfiler();
              foliaProfiler.startTimer(timerId);
@@ -97,7 +97,7 @@ index 53f97a89d05ed7c764975cda9a301ed04d3503d9..7e20e947fe35e8f8073a3bf97fb257bf
              try {
                  // Folia end - profiler
              entity.setOldPosAndRot();
-@@ -1596,6 +1601,7 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
+@@ -1597,6 +1602,7 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
                  this.tickPassenger(entity, passenger, isActive); // Paper - EAR 2
              }
              } finally { foliaProfiler.stopTimer(timerId); } // Folia - profiler
@@ -106,7 +106,7 @@ index 53f97a89d05ed7c764975cda9a301ed04d3503d9..7e20e947fe35e8f8073a3bf97fb257bf
      }
  
 diff --git a/net/minecraft/server/level/ServerPlayer.java b/net/minecraft/server/level/ServerPlayer.java
-index ab6229ee412cf2aa5affc87510230c587765080b..f0c574e039f80ff0227239356de8d61ef06a0936 100644
+index 09be845b8d559dc47f1f782c7c76334b605854d2..01a468f35337ff086784ce16543efae3fea25829 100644
 --- a/net/minecraft/server/level/ServerPlayer.java
 +++ b/net/minecraft/server/level/ServerPlayer.java
 @@ -441,7 +441,9 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
@@ -183,10 +183,10 @@ index f03fa06c0ba56f7f5e1e45bc1568a490751efde3..eee1c14249addbf4714df733870da974
 +    // KioCG end
  }
 diff --git a/net/minecraft/world/entity/Entity.java b/net/minecraft/world/entity/Entity.java
-index c5632816feebc11330f508fdf8e74aa122b47a86..87f1e006f6d9220ad74f4bfb70900403023b77c7 100644
+index cb5b805973174699046f641dc5def37fdc8d69de..5c7d270bec642172e16ef1f937a516471b407367 100644
 --- a/net/minecraft/world/entity/Entity.java
 +++ b/net/minecraft/world/entity/Entity.java
-@@ -6394,4 +6394,6 @@ public abstract class Entity
+@@ -6486,4 +6486,6 @@ public abstract class Entity
          return ((ServerLevel) this.level()).isPositionEntityTicking(this.blockPosition());
      }
      // Paper end
@@ -258,7 +258,7 @@ index f79353aa58b03d00839e4e95d1fd2480a635a592..0a43947bcc9f505ad9bc4d54c564709c
 +    // KioCG end
  }
 diff --git a/net/minecraft/world/entity/player/Player.java b/net/minecraft/world/entity/player/Player.java
-index 2eb5fc819e2e17c69de87f8aa1a99e02bc5a62d5..a4bc767b799c050ce07a3685f655b4ba947d2466 100644
+index 5ffcf20d06f8a0cc0394347d8ef4cfa1e89ebab2..a26025ec6c3c6fe84bfc598176a6d4ff49de4a41 100644
 --- a/net/minecraft/world/entity/player/Player.java
 +++ b/net/minecraft/world/entity/player/Player.java
 @@ -170,6 +170,7 @@ public abstract class Player extends Avatar implements ContainerUser {

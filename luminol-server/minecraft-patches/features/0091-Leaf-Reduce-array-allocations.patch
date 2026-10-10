@@ -17,10 +17,10 @@ Folia stubs that method with UnsupportedOperationException (region
 threading), so the allocation being optimised no longer exists.
 
 diff --git a/net/minecraft/world/entity/Mob.java b/net/minecraft/world/entity/Mob.java
-index a375b567eb71c661cdd67c19c18d37e674374cef..9c3ecc4dcb320c229fc5ab6571145ead8dffd681 100644
+index e7ebdbb8d77f841551c5ebb0f8e7b4402f6a4751..b2b0afdcee80a871c20994484e57347e93844bc1 100644
 --- a/net/minecraft/world/entity/Mob.java
 +++ b/net/minecraft/world/entity/Mob.java
-@@ -391,7 +391,7 @@ public abstract class Mob extends LivingEntity implements Targeting, EquipmentUs
+@@ -392,7 +392,7 @@ public abstract class Mob extends LivingEntity implements Targeting, EquipmentUs
          if (this.xpReward > 0) {
              int result = this.xpReward;
  
@@ -29,7 +29,7 @@ index a375b567eb71c661cdd67c19c18d37e674374cef..9c3ecc4dcb320c229fc5ab6571145ead
                  if (slot.canIncreaseExperience()) {
                      ItemStack item = this.getItemBySlot(slot);
                      if (!item.isEmpty() && this.dropChances.byEquipment(slot) <= 1.0F) {
-@@ -682,7 +682,7 @@ public abstract class Mob extends LivingEntity implements Targeting, EquipmentUs
+@@ -681,7 +681,7 @@ public abstract class Mob extends LivingEntity implements Targeting, EquipmentUs
      }
  
      protected boolean attemptToShearEquipment(final Player player, final InteractionHand hand, final ItemStack heldItem) {
@@ -65,9 +65,7 @@ index a375b567eb71c661cdd67c19c18d37e674374cef..9c3ecc4dcb320c229fc5ab6571145ead
              if (slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR) {
                  this.enchantSpawnedArmor(level, random, slot, localDifficulty);
              }
-@@ -1658,9 +1658,9 @@ public abstract class Mob extends LivingEntity implements Targeting, EquipmentU
-     // Folia start - moved from removeAfterChangingDimensions()
-     @Override
+@@ -1668,7 +1668,7 @@ public abstract class Mob extends LivingEntity implements Targeting, EquipmentUs
      protected void postRemoveAfterChangingDimensions() {
          super.postRemoveAfterChangingDimensions();
  

@@ -6,10 +6,10 @@ Subject: [PATCH] Fix riding statistics desync
 Referred to: https://github.com/CraftCanvasMC/Canvas/commit/057175b0c10d5a4d1d9059fd9d077750c32633b2
 
 diff --git a/net/minecraft/server/level/ServerPlayer.java b/net/minecraft/server/level/ServerPlayer.java
-index 34cc36f6bdf435593d16f2e7af280a27be048280..98d1ab3aa8dfbe571371d01544da2750339ce988 100644
+index 01fabc6d6bbf114cd2bfae2a58b61a1821671719..fee841632caaecf9c18bb42953ce44edce2417c6 100644
 --- a/net/minecraft/server/level/ServerPlayer.java
 +++ b/net/minecraft/server/level/ServerPlayer.java
-@@ -2537,7 +2537,7 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
+@@ -2516,7 +2516,7 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
          }
      }
  
@@ -19,10 +19,10 @@ index 34cc36f6bdf435593d16f2e7af280a27be048280..98d1ab3aa8dfbe571371d01544da2750
              int distance = Math.round((float)Math.sqrt(dx * dx + dy * dy + dz * dz) * 100.0F);
              Entity vehicle = this.getVehicle();
 diff --git a/net/minecraft/world/entity/Entity.java b/net/minecraft/world/entity/Entity.java
-index 2a8a7aeddffdfed31cd6e1162c0756986049fbab..89209fffec9ff931ab4bd2e75b2588f4062b0def 100644
+index 75dabd3e7b6077b5ae8ee30048786442742b93f9..6fa3ac9a37dafa166d8e70aaf4ec369db0792200 100644
 --- a/net/minecraft/world/entity/Entity.java
 +++ b/net/minecraft/world/entity/Entity.java
-@@ -4198,7 +4198,13 @@ public abstract class Entity
+@@ -4200,7 +4200,13 @@ public abstract class Entity
              }
          }
  
@@ -36,7 +36,7 @@ index 2a8a7aeddffdfed31cd6e1162c0756986049fbab..89209fffec9ff931ab4bd2e75b2588f4
              java.util.ArrayDeque<EntityTreeNode> queue = new java.util.ArrayDeque<>();
              queue.add(this);
  
-@@ -4211,14 +4217,24 @@ public abstract class Entity
+@@ -4213,14 +4219,24 @@ public abstract class Entity
  
                  for (EntityTreeNode passenger : passengers) {
                      queue.add(passenger);

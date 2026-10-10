@@ -8,8 +8,9 @@ Original license: GPL-3.0-only (https://github.com/Winds-Studio/Leaf/blob/ver/26
 Gale - https://galemc.org
 
 The JMH benchmark of this patch can be found in SunBox's `FasterFloatingPointPositiveModulo`
+
 diff --git a/net/minecraft/util/Mth.java b/net/minecraft/util/Mth.java
-index dd4ea17393f190deae26ada6451afe2a2ee212f9..c600798fff3f71056c9f462cef1d8d95fa82c321 100644
+index 4915e6d5757f9bf8d3b16990208800c43ead9705..05486324ba74c94f76481cc46782727f028fa50f 100644
 --- a/net/minecraft/util/Mth.java
 +++ b/net/minecraft/util/Mth.java
 @@ -167,14 +167,26 @@ public class Mth {

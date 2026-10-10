@@ -5,10 +5,10 @@ Subject: [PATCH] Rebrand to Luminol
 
 
 diff --git a/src/main/java/io/papermc/paper/ServerBuildInfo.java b/src/main/java/io/papermc/paper/ServerBuildInfo.java
-index 652ff54e7c50412503725d628bfe72ed03059790..db5e2f10278c20286779362cfdfadb2f42c724e0 100644
+index 4e099b584c3435ba1ebce492011d35ae1ac0cdf8..3f20b5a32183d23d381ff685cbc16954f0fe02ca 100644
 --- a/src/main/java/io/papermc/paper/ServerBuildInfo.java
 +++ b/src/main/java/io/papermc/paper/ServerBuildInfo.java
-@@ -19,6 +19,17 @@ public interface ServerBuildInfo {
+@@ -17,6 +17,17 @@ public interface ServerBuildInfo {
       */
      Key BRAND_PAPER_ID = Key.key("papermc", "paper");
  

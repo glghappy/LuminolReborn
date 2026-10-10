@@ -228,7 +228,7 @@ index 5a72fa0d72bfdb927293abe921c57f6ae964a6ec..f8344f640f119e3865f2718d1abd0ede
  
      private void uncaughtException(final Thread thread, final Throwable thr) {
 diff --git a/net/minecraft/server/MinecraftServer.java b/net/minecraft/server/MinecraftServer.java
-index cb837f6eb2e84171ee8b8aa59eb88296495bbe69..1df0a9255f577972ea80884957d12365596506d2 100644
+index d7261d0fdc9318047bf751a7850f9bdeae1a0cb4..46f798e708347e32aa946dff7306a0a3ea8bce58 100644
 --- a/net/minecraft/server/MinecraftServer.java
 +++ b/net/minecraft/server/MinecraftServer.java
 @@ -236,7 +236,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
@@ -240,7 +240,7 @@ index cb837f6eb2e84171ee8b8aa59eb88296495bbe69..1df0a9255f577972ea80884957d12365
      private PlayerList playerList;
      private volatile boolean running = true;
      private volatile boolean isRestarting = false; // Paper - flag to signify we're attempting to restart
-@@ -2024,14 +2024,14 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -2047,14 +2047,14 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
      }
  
      // CraftBukkit start
@@ -258,7 +258,7 @@ index cb837f6eb2e84171ee8b8aa59eb88296495bbe69..1df0a9255f577972ea80884957d12365
          Map<ResourceKey<Level>, ServerLevel> newLevels = Maps.newLinkedHashMap(oldLevels);
          newLevels.remove(level.dimension());
 diff --git a/net/minecraft/server/level/ServerLevel.java b/net/minecraft/server/level/ServerLevel.java
-index c879fa8f0358f7445b3ba0a85639ed49688df441..680b86efd29b7c4e60a0ddd667aac83a9292d123 100644
+index 6950fa2462353f30ee02e1d0091cfcf289f63939..def5d4ce012dba5f819680d671235173467bfe7a 100644
 --- a/net/minecraft/server/level/ServerLevel.java
 +++ b/net/minecraft/server/level/ServerLevel.java
 @@ -221,6 +221,12 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
@@ -275,10 +275,10 @@ index c879fa8f0358f7445b3ba0a85639ed49688df441..680b86efd29b7c4e60a0ddd667aac83a
      // CraftBukkit start
      private final ResourceKey<LevelStem> typeKey;
 diff --git a/net/minecraft/server/level/ServerPlayer.java b/net/minecraft/server/level/ServerPlayer.java
-index 264de9099b19779f20ad23c41d0967670759ae12..ab6229ee412cf2aa5affc87510230c587765080b 100644
+index 01ac0034be2cf8f7e3348be8e6e2512c239494da..09be845b8d559dc47f1f782c7c76334b605854d2 100644
 --- a/net/minecraft/server/level/ServerPlayer.java
 +++ b/net/minecraft/server/level/ServerPlayer.java
-@@ -1705,7 +1705,30 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
+@@ -1694,7 +1694,30 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
  
          ServerLevel origin = this.level();
          ServerPlayer.RespawnConfig respawnConfig = this.getRespawnConfig();
@@ -310,7 +310,7 @@ index 264de9099b19779f20ad23c41d0967670759ae12..ab6229ee412cf2aa5affc87510230c58
  
          // modified based off PlayerList#respawn
  
-@@ -1756,8 +1779,8 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
+@@ -1745,8 +1768,8 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
                      // now the respawn logic is complete
  
                      // last, call the function callback
@@ -322,10 +322,10 @@ index 264de9099b19779f20ad23c41d0967670759ae12..ab6229ee412cf2aa5affc87510230c58
                  }
              );
 diff --git a/net/minecraft/server/network/ServerConfigurationPacketListenerImpl.java b/net/minecraft/server/network/ServerConfigurationPacketListenerImpl.java
-index 97f4c546663fb19558246366a3d8d77f2b9327ef..e5304e9d1ea57c01a1147621a42a9b584878f765 100644
+index 111789b4aca281dd1899dfbcc4e7e0ca36d74b51..2d3b0243f061aeaa979ddfc89c0361ecc29edcde 100644
 --- a/net/minecraft/server/network/ServerConfigurationPacketListenerImpl.java
 +++ b/net/minecraft/server/network/ServerConfigurationPacketListenerImpl.java
-@@ -210,8 +210,23 @@ public class ServerConfigurationPacketListenerImpl extends ServerCommonPacketLis
+@@ -219,8 +219,23 @@ public class ServerConfigurationPacketListenerImpl extends ServerCommonPacketLis
  
              this.switchToMain = serverPlayer;
              // now the connection responsibility is transferred to the region
@@ -350,7 +350,7 @@ index 97f4c546663fb19558246366a3d8d77f2b9327ef..e5304e9d1ea57c01a1147621a42a9b58
              world.moonrise$getChunkTaskScheduler().scheduleTickingState(
                      chunkPos.x(), chunkPos.z(), net.minecraft.server.level.FullChunkStatus.ENTITY_TICKING, true,
                      ca.spottedleaf.concurrentutil.util.Priority.HIGHER,
-@@ -223,9 +238,15 @@ public class ServerConfigurationPacketListenerImpl extends ServerCommonPacketLis
+@@ -232,9 +247,15 @@ public class ServerConfigurationPacketListenerImpl extends ServerCommonPacketLis
                          );
                          io.papermc.paper.threadedregions.RegionizedServer.getInstance().taskQueue.queueTickTaskQueue(
                                  world, chunkPos.x(), chunkPos.z(), () -> {
@@ -367,7 +367,7 @@ index 97f4c546663fb19558246366a3d8d77f2b9327ef..e5304e9d1ea57c01a1147621a42a9b58
                          );
                      }
 diff --git a/net/minecraft/server/network/config/PrepareSpawnTask.java b/net/minecraft/server/network/config/PrepareSpawnTask.java
-index 48f51b0f94df3e59c9410129489c63a4287bc0bc..2682f8702785b1e501748a308c5e394b8b664428 100644
+index 9fad06eda81b4c2c1889a9cfa7a6948e7ee01862..854f8954ccfd8c34c9f9c91fd1805260f9b429b5 100644
 --- a/net/minecraft/server/network/config/PrepareSpawnTask.java
 +++ b/net/minecraft/server/network/config/PrepareSpawnTask.java
 @@ -104,6 +104,16 @@ public class PrepareSpawnTask implements ConfigurationTask {
@@ -429,10 +429,10 @@ index 48f51b0f94df3e59c9410129489c63a4287bc0bc..2682f8702785b1e501748a308c5e394b
          private final Vec2 spawnAngle;
  
 diff --git a/net/minecraft/world/entity/Entity.java b/net/minecraft/world/entity/Entity.java
-index 9dab43248bdefec7efe5ff73842fc601473f9e71..061c2d793b4c23448188dcdc0534dd55dc94de6f 100644
+index 3ea74b0ee3527c109b3491a5fa3b5bdd26214292..ccbd1760c66c86971cec7a89442a647267f4a2f6 100644
 --- a/net/minecraft/world/entity/Entity.java
 +++ b/net/minecraft/world/entity/Entity.java
-@@ -392,6 +392,9 @@ public abstract class Entity
+@@ -393,6 +393,9 @@ public abstract class Entity
      public void inactiveTick() {
      }
      // Paper end - EAR 2
@@ -442,7 +442,7 @@ index 9dab43248bdefec7efe5ff73842fc601473f9e71..061c2d793b4c23448188dcdc0534dd55
      // CraftBukkit end
  
      // Paper start
-@@ -4538,6 +4541,17 @@ public abstract class Entity
+@@ -4540,6 +4543,17 @@ public abstract class Entity
              }
          }
  
@@ -460,7 +460,7 @@ index 9dab43248bdefec7efe5ff73842fc601473f9e71..061c2d793b4c23448188dcdc0534dd55
          // TODO any events that can modify go HERE
  
          // check for same region
-@@ -4556,6 +4570,14 @@ public abstract class Entity
+@@ -4558,6 +4572,14 @@ public abstract class Entity
              }
  
              for (EntityTreeNode entity : passengerTree.getFullTree()) {
@@ -475,7 +475,7 @@ index 9dab43248bdefec7efe5ff73842fc601473f9e71..061c2d793b4c23448188dcdc0534dd55
                  entity.root.teleportSyncSameRegion(pos, yaw, pitch, velocity);
              }
  
-@@ -4571,8 +4593,8 @@ public abstract class Entity
+@@ -4573,8 +4595,8 @@ public abstract class Entity
                  // performs add/remove from world logic which will also perform add/remove tracker logic
              }
  
@@ -486,7 +486,7 @@ index 9dab43248bdefec7efe5ff73842fc601473f9e71..061c2d793b4c23448188dcdc0534dd55
              }
              return true;
          }
-@@ -4589,7 +4611,7 @@ public abstract class Entity
+@@ -4591,7 +4613,7 @@ public abstract class Entity
              node.root = node.root.transformForAsyncTeleport(destination, pos, yaw, pitch, velocity);
          }
  
@@ -495,7 +495,7 @@ index 9dab43248bdefec7efe5ff73842fc601473f9e71..061c2d793b4c23448188dcdc0534dd55
  
          return true;
      }
-@@ -4864,6 +4886,13 @@ public abstract class Entity
+@@ -4870,6 +4892,13 @@ public abstract class Entity
              ca.spottedleaf.moonrise.common.util.CoordinateUtils.getChunkX(initialPosition),
              ca.spottedleaf.moonrise.common.util.CoordinateUtils.getChunkZ(initialPosition)
          );
@@ -509,7 +509,7 @@ index 9dab43248bdefec7efe5ff73842fc601473f9e71..061c2d793b4c23448188dcdc0534dd55
  
          // first, remove entity/passengers from world
          EntityTreeNode passengerTree = this.detachPassengers();
-@@ -4921,6 +4950,10 @@ public abstract class Entity
+@@ -4927,6 +4956,10 @@ public abstract class Entity
                      if (info.postTeleportTransition() != null) {
                          info.postTeleportTransition().onTransition(teleported);
                      }

@@ -5,11 +5,12 @@ Subject: [PATCH] Leaf: Cache biome zoom seed
 
 Ported to Luminol from Leaf (https://github.com/Winds-Studio/Leaf/blob/ver/26.2/leaf-server/minecraft-patches/features/0231-cache-biome-zoom-seed.patch)
 Original license: https://github.com/Winds-Studio/Leaf/blob/ver/26.2/LICENSE.md
+
 diff --git a/net/minecraft/server/MinecraftServer.java b/net/minecraft/server/MinecraftServer.java
-index 7d43201ad4b66209c31f69c32a0d88590aae906c..c6a6babf3329dd7b622bd84b1d5446b952c6740b 100644
+index 4c714a95ea24c734c6aabaf5350d25e04e9c27e3..85e8d1bd0ca29de974ca02ff00929a89f397858d 100644
 --- a/net/minecraft/server/MinecraftServer.java
 +++ b/net/minecraft/server/MinecraftServer.java
-@@ -724,8 +724,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -696,8 +696,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
          final ResourceKey<Level> dimensionKey = loading.info().dimensionKey();
          final SavedDataStorage savedDataStorage = new SavedDataStorage(this.storageSource.getDimensionPath(dimensionKey).resolve(LevelResource.DATA.id()), this.getFixerUpper(), this.registryAccess());
          savedDataStorage.set(WorldGenSettings.TYPE, new WorldGenSettings(worldDataAndGenSettings.genSettings().options(), worldDataAndGenSettings.genSettings().dimensions()));
@@ -20,10 +21,10 @@ index 7d43201ad4b66209c31f69c32a0d88590aae906c..c6a6babf3329dd7b622bd84b1d5446b9
              new PhantomSpawner(), new PatrolSpawner(), new CatSpawner(), new VillageSiege(), new WanderingTraderSpawner(savedDataStorage) // Paper - save to world data
          );
 diff --git a/net/minecraft/server/level/ServerPlayer.java b/net/minecraft/server/level/ServerPlayer.java
-index c8a95d67dbe687fad6086e13fab0087b8ed715e1..4030776c3d12f8e797720180e141322b5d2cc548 100644
+index 79a3fd37d495969430421be3bb1571e98bcfd3ed..c384f52184ad22373b740b2a0e05a736b03a4d72 100644
 --- a/net/minecraft/server/level/ServerPlayer.java
 +++ b/net/minecraft/server/level/ServerPlayer.java
-@@ -3055,7 +3055,7 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
+@@ -3426,7 +3426,7 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
          return new CommonPlayerSpawnInfo(
              level.dimensionTypeRegistration(),
              level.dimension(),
@@ -33,10 +34,10 @@ index c8a95d67dbe687fad6086e13fab0087b8ed715e1..4030776c3d12f8e797720180e141322b
              this.gameMode.getPreviousGameModeForPlayer(),
              level.isDebug(),
 diff --git a/net/minecraft/server/level/WorldGenRegion.java b/net/minecraft/server/level/WorldGenRegion.java
-index 015539951e2a6af0e7b50c05512d1f6200ef2797..1049e948496fcbab5f3d5789ec1e975692309a36 100644
+index 0b1f5a85c17c4c5266701aaa7959e95f848ad6c1..bde1b490cb5484575c7a4c28caaa9b29eb2cbe5d 100644
 --- a/net/minecraft/server/level/WorldGenRegion.java
 +++ b/net/minecraft/server/level/WorldGenRegion.java
-@@ -118,7 +118,7 @@ public class WorldGenRegion implements WorldGenLevel {
+@@ -125,7 +125,7 @@ public class WorldGenRegion implements WorldGenLevel {
          this.levelData = level.getLevelData();
          this.random = level.getChunkSource().randomState().getOrCreateRandomFactory(WORLDGEN_REGION_RANDOM).at(this.center.getPos().getWorldPosition());
          this.dimensionType = level.dimensionType();
@@ -46,29 +47,30 @@ index 015539951e2a6af0e7b50c05512d1f6200ef2797..1049e948496fcbab5f3d5789ec1e9756
          this.centerChunkX = centerPos.x();
          this.centerChunkZ = centerPos.z();
 diff --git a/net/minecraft/world/level/levelgen/WorldOptions.java b/net/minecraft/world/level/levelgen/WorldOptions.java
-index b23dd531d284647e614f07f134c41e70593d5c04..4d58651cbaedb3035b7d8d8f367afc3f980da295 100644
+index 38495536001442b1591251d7625ccdad4b73caf3..934a1251aa21561030eae2aa20a70e3c20420b79 100644
 --- a/net/minecraft/world/level/levelgen/WorldOptions.java
 +++ b/net/minecraft/world/level/levelgen/WorldOptions.java
-@@ -38,6 +38,7 @@ public class WorldOptions {
-         : new WorldOptions("North Carolina".hashCode(), true, true);
+@@ -40,6 +40,7 @@ public class WorldOptions {
+             : new WorldOptions("North Carolina".hashCode(), true, true);
      // Leaf end - Matter - Secure Seed
      private final long seed;
 +    private final long biomeZoomSeed; // Leaf - cache biome zoom seed
      private long[] featureSeed = su.plo.matter.Globals.createRandomWorldSeed(); // Leaf - Matter - Secure Seed
      private final boolean generateStructures;
      private final boolean generateBonusChest;
-@@ -79,8 +80,15 @@ public class WorldOptions {
+@@ -80,11 +81,16 @@ public class WorldOptions {
+ 
+     private WorldOptions(final long seed, final boolean generateStructures, final boolean generateBonusChest, final Optional<String> legacyCustomOptions) {
+         this.seed = seed;
++        this.biomeZoomSeed = net.minecraft.world.level.biome.BiomeManager.obfuscateSeed(seed); // Leaf - cache biome zoom seed
          this.generateStructures = generateStructures;
          this.generateBonusChest = generateBonusChest;
          this.legacyCustomOptions = legacyCustomOptions;
-+        this.biomeZoomSeed = net.minecraft.world.level.biome.BiomeManager.obfuscateSeed(seed); // Leaf - cache biome zoom seed
      }
  
-+    // Leaf start - cache biome zoom seed
-+    public long biomeZoomSeed() {
++    public long biomeZoomSeed() { // Leaf - cache biome zoom seed
 +        return this.biomeZoomSeed;
 +    }
-+    // Leaf end - cache biome zoom seed
 +
      public long seed() {
          return this.seed;

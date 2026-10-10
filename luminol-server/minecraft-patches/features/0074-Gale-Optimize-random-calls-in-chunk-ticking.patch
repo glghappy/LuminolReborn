@@ -57,10 +57,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 diff --git a/net/minecraft/server/level/ServerLevel.java b/net/minecraft/server/level/ServerLevel.java
-index 16ba0ea0b6a4a9ffb5521221a721909f8cb16fc8..10b5783ec1220393e6f9c6233c6111654f5fd461 100644
+index 1024e68e1e3344b02c6e37c501a4ac989f486463..2e84df044e65d2f145a190d1bbbb7de205d85e77 100644
 --- a/net/minecraft/server/level/ServerLevel.java
 +++ b/net/minecraft/server/level/ServerLevel.java
-@@ -1058,7 +1058,7 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
+@@ -1059,7 +1059,7 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
      }
  
      // Paper start - optimise random ticking
@@ -69,7 +69,7 @@ index 16ba0ea0b6a4a9ffb5521221a721909f8cb16fc8..10b5783ec1220393e6f9c6233c611165
  
      private void optimiseRandomTick(final LevelChunk chunk, final int tickSpeed) {
          final LevelChunkSection[] sections = chunk.getSections();
-@@ -1140,7 +1140,7 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
+@@ -1141,7 +1141,7 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
          int minZ = chunkPos.getMinBlockZ();
          ProfilerFiller profiler = Profiler.get();
          profiler.push("thunder");
