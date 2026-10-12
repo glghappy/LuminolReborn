@@ -1,0 +1,44 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: SucIXR <sasasa123456@foxmail.com>
+Date: Fri, 24 Jul 2026 11:02:19 +0800
+Subject: [PATCH] Network_PlayerThrottling
+
+
+diff --git a/ca/spottedleaf/moonrise/patches/chunk_system/player/RegionizedPlayerChunkLoader.java b/ca/spottedleaf/moonrise/patches/chunk_system/player/RegionizedPlayerChunkLoader.java
+--- a/ca/spottedleaf/moonrise/patches/chunk_system/player/RegionizedPlayerChunkLoader.java
++++ b/ca/spottedleaf/moonrise/patches/chunk_system/player/RegionizedPlayerChunkLoader.java
+@@ -595,7 +595,15 @@ public final class RegionizedPlayerChunkLoader {
+         private double getMaxChunkSendRate() {
+             final double configRate = PlatformHooks.get().configPlayerMaxSendRate();
+ 
+-            return configRate <= 0.0 || configRate > (double)MAX_RATE ? (double)MAX_RATE : Math.max(1.0, configRate);
++            double baseRate= configRate <= 0.0 || configRate > (double)MAX_RATE ? (double)MAX_RATE : Math.max(1.0, configRate); //Kitin
++            //Kitin start - Network_PlayerThrottling
++            if (!me.sucixr.kitin.config.KitinConfig.useVanillaChunkSender)
++                return me.sucixr.kitin.network.misc.ChunkSendPolicy
++                        .getInstance()
++                        .limitSendRate(player, baseRate);
++            else
++                return baseRate;
++            //Kitin end
+         }
+ 
+         private long getMaxChunkLoads() {
+diff --git a/net/minecraft/server/level/ChunkMap.java b/net/minecraft/server/level/ChunkMap.java
+--- a/net/minecraft/server/level/ChunkMap.java
++++ b/net/minecraft/server/level/ChunkMap.java
+@@ -1372,6 +1372,14 @@ public class ChunkMap extends SimpleRegionStorage implements ChunkHolder.PlayerP
+                 // Paper end - remove allocation of Vec3D here
+                 int playerViewDistance = ChunkMap.this.getPlayerViewDistance(player);
+                 double visibleRange = Math.min(this.getEffectiveRange(), playerViewDistance * 16);
++
++                // Kitin start - Network_PlayerThrottling
++                if (!me.sucixr.kitin.config.KitinConfig.useVanillaChunkSender)
++                    visibleRange = me.sucixr.kitin.network.misc.EntitySendPolicy
++                            .getInstance()
++                            .adjustTrackingRange(player, visibleRange);
++                // Kitin end
++
+                 double distanceSquared = deltaToPlayerX * deltaToPlayerX + deltaToPlayerZ * deltaToPlayerZ; // Paper
+                 double rangeSquared = visibleRange * visibleRange;
+                 // Paper start - Configurable entity tracking range by Y

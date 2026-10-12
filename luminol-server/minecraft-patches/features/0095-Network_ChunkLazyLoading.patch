@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: SucIXR <sasasa123456@foxmail.com>
+Date: Fri, 24 Jul 2026 10:59:37 +0800
+Subject: [PATCH] Network_ChunkLazyLoading
+
+
+diff --git a/ca/spottedleaf/moonrise/patches/chunk_system/player/RegionizedPlayerChunkLoader.java b/ca/spottedleaf/moonrise/patches/chunk_system/player/RegionizedPlayerChunkLoader.java
+--- a/ca/spottedleaf/moonrise/patches/chunk_system/player/RegionizedPlayerChunkLoader.java
++++ b/ca/spottedleaf/moonrise/patches/chunk_system/player/RegionizedPlayerChunkLoader.java
+@@ -919,6 +919,13 @@ public final class RegionizedPlayerChunkLoader {
+         }
+ 
+         void update() {
++            // Kitin start - lazy chunk update gate (with init guard)
++            if (this.lastSendDistance != Integer.MIN_VALUE // 或者 lastChunkX != MIN_VALUE 也行
++                    && me.sucixr.kitin.network.misc.ChunkLoadPolicy.getInstance().shouldSkipChunkUpdate(this.player)
++                    && me.sucixr.kitin.config.KitinConfig.chunkLazyLoading) {
++                return;
++            }
++            // Kitin end
+             TickThread.ensureTickThread(this.player, "Cannot update player asynchronously");
+             if (this.removed) {
+                 throw new IllegalStateException("Updating removed player chunk loader");
